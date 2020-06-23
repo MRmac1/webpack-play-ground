@@ -2,5 +2,5 @@ import React from 'react';
 import Layout from '../layout';
 
 export default () => {
-  return <Layout>home page</Layout>
+  return <Layout>home page ~</Layout>
 }

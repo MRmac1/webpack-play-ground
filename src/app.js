@@ -1,4 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
+import './app.scss';
 
-render(React.createElement('span', null, 'Hello world'), document.querySelector('#root'))
+render(<span>Hello world</span>, document.querySelector('#root'))
