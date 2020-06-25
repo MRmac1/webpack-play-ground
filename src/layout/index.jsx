@@ -2,6 +2,8 @@ import React from 'react';
 
 export default (props) => {
   return <div>
-    this is nav
+    this is hahah
+    <br />
+    {props.children}
   </div>
 }

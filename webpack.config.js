@@ -1,21 +1,26 @@
 const path = require('path');
+const webpack = require('webpack');
+const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const DashboardPlugin = require('webpack-dashboard/plugin');
+const SpeadMeasurePlugin = require('speed-measure-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
+const smp = new SpeadMeasurePlugin();
+
+module.exports = smp.wrap({
   context: path.resolve(__dirname, 'src'),
   entry: {
     app: './app.js',
     home: './home',
     detailPage: './detail-page',
     listPage: './list-page',
-    vendor: ['react', 'react-dom']
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dist/',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -29,6 +34,7 @@ module.exports = {
             presets: [['@babel/preset-env', {
               modules: false
             }], '@babel/preset-react'],
+            "plugins": ["react-hot-loader/babel"]
           }
         }]
       },
@@ -44,16 +50,25 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './index.html'),
       filename: 'index.html',
-      chunks: ['app', 'vendor'],
+      chunks: ['app'],
       minify: false
     }),
     new MiniCssExtractPlugin({
       filename: 'app.css',
-    })
+    }),
+    new DashboardPlugin()
   ],
+  // optimization: {
+  //   splitChunks: {
+  //     chunks: 'all'
+  //   }
+  // },
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  mode: 'production',
-  devtool: 'source-map'
-}
+  mode: 'development',
+  devServer: {
+    hot: true
+  }
+  // devtool: 'source-map'
+})
