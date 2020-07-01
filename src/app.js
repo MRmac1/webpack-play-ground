@@ -23,7 +23,6 @@ const render = Component => {
   );
 };
 
-// 修改 App 组件不生效，奇怪
 render(hot(App));
 
 if(module.hot) {

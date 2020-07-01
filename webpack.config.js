@@ -1,11 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
-const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const SpeadMeasurePlugin = require('speed-measure-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
 const smp = new SpeadMeasurePlugin();
 
@@ -46,6 +47,7 @@ module.exports = smp.wrap({
     ]
   },
   plugins: [
+    new ProgressBarPlugin(),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './index.html'),
@@ -56,17 +58,27 @@ module.exports = smp.wrap({
     new MiniCssExtractPlugin({
       filename: 'app.css',
     }),
-    new DashboardPlugin()
+    // new DashboardPlugin()
+    new BundleAnalyzerPlugin(),
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('./manifest.json'),
+    }),
   ],
   // optimization: {
   //   splitChunks: {
-  //     chunks: 'all'
+  //     cacheGroups: {
+  //       commons: {
+  //         name: 'commons',
+  //         chunks: 'all',
+  //       }
+  //     }
   //   }
   // },
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  mode: 'development',
+  mode: 'production',
   devServer: {
     hot: true
   }
